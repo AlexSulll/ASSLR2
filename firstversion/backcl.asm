@@ -8,6 +8,7 @@ MAX     =   256
     outrange        db  0Dh, 0Ah, 'Len string out of range','$'
     output_string   db  0Dh, 0Ah, 'Output: ','$'
     short_string    db  'Need more word','$'
+    waiting         db  0Dh, 0Ah, 'Press any key to exit...','$'
     space           db  ?
     string          db  MAX DUP(?)
 .code
@@ -104,7 +105,7 @@ clearing:
     mov     ah,09h
     mov     dx,offset short_string
     int     21h
-    jmp     exit
+    jmp     ozidanie
 more_four:
     mov     di,si
     mov     bx,si
@@ -166,6 +167,17 @@ output_str:
     mov     bx,1   
     mov     ah,40h      
     int     21h
+ozidanie:
+    mov     ah,03h
+    int     10h
+    mov     ah,02h
+    inc     dh
+    int     10h
+    mov     ah,09h
+    mov     dx,offset waiting
+    int     21h
+    xor     ah,ah
+    int     16h
 exit:
     mov     ah,4Ch
     int     21h
